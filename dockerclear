@@ -1,0 +1,28 @@
+#!/bin/sh
+
+#==============================================================================
+#Title            :dockerclear
+#Description      :This script will remove docker processes and images.
+#Usage            :sh dockerclear [ACTION]
+#==============================================================================
+
+stop () {
+	[ -z "$(docker ps -q)" ] || docker stop $(docker ps -q)
+}
+
+rm () {
+	stop
+	[ -z "$(docker ps -aq)" ] || docker rm $(docker ps -aq)
+}
+
+clear () {
+	[ -z "$(docker images -q)" ] || docker rmi $(docker images -q)
+}
+
+case "$1" in
+	stop|s|--s) stop;;
+	remove|r|--r) rm;;
+	clear|c|--c) clear;;
+	all|a|--a) stop; rm; clear;;
+	*) echo "Invalid command"; exit 1;;
+esac
