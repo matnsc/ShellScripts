@@ -13,7 +13,7 @@ usage() {
 
 menu() {
 	echo "webm2mp4 uses wget and ffmpeg to download a webm and convert to mp4."
-	printf "\nOptional parameters:\n"
+	printf "\nOptional parameters:"
 	printf "\n\t--best\tUse H-265 encoder (default:H-264)\n\n"
 	echo "Usage: webm2mp4 [OPTION] [URL]"
 }

@@ -2,17 +2,31 @@
 
 #==============================================================================
 #Title            :dockerclear
-#Description      :This script will remove docker processes and images.
-#Usage            :sh dockerclear [ACTION]
+#Description      :This script will stop/remove docker containers and images.
+#Usage            :sh dockerclear [OPTION]
 #==============================================================================
+
+usage () {
+	echo "Usage: dockerclear [OPTION]"
+	echo "Try 'dockerclear --help' for more information."
+}
+
+help () {
+	echo "dockerclear is used to stop/remove docker containers and images."
+	printf "\nOptions:"
+	printf "\n\t--stop, --s\tStop running containers"
+	printf "\n\t--remove, --r\tRemove exited containers"
+	printf "\n\t--clear, --c\tRemove images"
+	printf "\n\t--all, --a\tExecute all other options\n\n"
+	echo "Usage: dockerclear [OPTION]"
+}
 
 stop () {
 	[ -z "$(docker ps -q)" ] || docker stop $(docker ps -q)
 }
 
 rm () {
-	stop
-	[ -z "$(docker ps -aq)" ] || docker rm $(docker ps -aq)
+	[ -z "$(docker ps -f "status=exited" -q)" ] || docker rm $(docker ps -aq)
 }
 
 clear () {
@@ -20,9 +34,10 @@ clear () {
 }
 
 case "$1" in
-	stop|s|--s) stop;;
-	remove|r|--r) rm;;
-	clear|c|--c) clear;;
-	all|a|--a) stop; rm; clear;;
-	*) echo "Invalid command"; exit 1;;
+	--stop|--s) stop;;
+	--remove|--r) rm;;
+	--clear|--c) clear;;
+	--all|--a) stop; rm; clear;;
+	--help) help;;
+	*) usage;;
 esac
